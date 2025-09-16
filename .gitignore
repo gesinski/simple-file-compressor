@@ -1,0 +1,8 @@
+# compiled binaries
+*.out
+
+# text files (test inputs/outputs)
+*.txt
+
+# your custom compressed files
+*.shrink

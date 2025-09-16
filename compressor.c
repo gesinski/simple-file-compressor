@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <rle.h>
-#include <rld.h>
+#include "rle.h"
+#include "rld.h"
 
 int main(int argc, char* argv[]) {
     FILE *file, *fcompressed;
@@ -10,7 +10,7 @@ int main(int argc, char* argv[]) {
     size_t bytesRead;
 
     char fcompressed_name[1024]; 
-    snprintf(fcompressed_name, sizeof(argv[1]), "%s.shrink", argv[1]);
+    snprintf(fcompressed_name, sizeof(fcompressed_name), "%s.shrink", argv[1]);
 
     file = fopen(argv[1], "rb");
     if (!file) {
