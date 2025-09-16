@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "rle.h"
 #include "rld.h"
+#include "huffman-encoding.h"
 
 int main(int argc, char* argv[]) {
     FILE *file, *fcompressed;
@@ -45,13 +46,15 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    unsigned char *compressed_buffer = (unsigned char*) malloc(fileSize);
-    long compressed_buffer_length = rle(buffer, compressed_buffer, fileSize);
-    fwrite(compressed_buffer, 1, compressed_buffer_length, fcompressed);
-    free(compressed_buffer);
-    //huffman_encode();
+    unsigned char *buffer_rle = (unsigned char*) malloc(fileSize);
+    long buffer_length_rle = rle(buffer, buffer_rle, fileSize);
+    unsigned char *buffer_huffman = (unsigned char*) malloc(buffer_length_rle);
+    long compressed_buffer_length = huffman_encode(buffer_length_rle, buffer_rle, buffer_huffman);
+    //fwrite(compressed_buffer, 1, compressed_buffer_length, fcompressed);
+    //free(compressed_buffer);
 
     fclose(fcompressed);
     free(buffer);
+    free(buffer_rle);
     return 0;
 }
