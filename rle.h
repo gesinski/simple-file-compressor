@@ -1,4 +1,4 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void rle(unsigned char *, FILE *, long);
+long rle(unsigned char *, char *, long);

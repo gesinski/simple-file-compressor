@@ -45,7 +45,11 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    rle(buffer, fcompressed, fileSize);
+    unsigned char *compressed_buffer = (unsigned char*) malloc(fileSize);
+    long compressed_buffer_length = rle(buffer, compressed_buffer, fileSize);
+    fwrite(compressed_buffer, 1, compressed_buffer_length, fcompressed);
+    free(compressed_buffer);
+    //huffman_encode();
 
     fclose(fcompressed);
     free(buffer);

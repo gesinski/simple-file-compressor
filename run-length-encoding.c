@@ -1,7 +1,6 @@
 #include "rle.h"
 
-void rle(unsigned char *buffer, FILE *fcompressed, long fileSize) {
-    unsigned char *compressed_buffer = (unsigned char*) malloc(fileSize);
+long rle(unsigned char *buffer, char *compressed_buffer, long fileSize) {
     long compressed_buffer_length = 0;
 
     for(long i = 0; i < fileSize; ) {
@@ -24,6 +23,5 @@ void rle(unsigned char *buffer, FILE *fcompressed, long fileSize) {
             compressed_buffer[compressed_buffer_length++] = current_letter;
         }
     }
-    fwrite(compressed_buffer, 1, compressed_buffer_length, fcompressed);
-    free(compressed_buffer);
+    return compressed_buffer_length;
 } 
