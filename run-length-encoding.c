@@ -1,6 +1,6 @@
 #include "rle.h"
 
-long rle(unsigned char *buffer, char *compressed_buffer, long fileSize) {
+long rle(unsigned char *buffer, unsigned char *compressed_buffer, long fileSize) {
     long compressed_buffer_length = 0;
 
     for(long i = 0; i < fileSize; ) {

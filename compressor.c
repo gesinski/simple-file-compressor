@@ -50,11 +50,12 @@ int main(int argc, char* argv[]) {
     long buffer_length_rle = rle(buffer, buffer_rle, fileSize);
     unsigned char *buffer_huffman = (unsigned char*) malloc(buffer_length_rle);
     long compressed_buffer_length = huffman_encode(buffer_length_rle, buffer_rle, buffer_huffman);
-    //fwrite(compressed_buffer, 1, compressed_buffer_length, fcompressed);
-    //free(compressed_buffer);
+    
+    fwrite(buffer_huffman, 1, compressed_buffer_length, fcompressed);
 
     fclose(fcompressed);
     free(buffer);
     free(buffer_rle);
+    free(buffer_huffman);
     return 0;
 }

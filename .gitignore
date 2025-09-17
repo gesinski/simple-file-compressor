@@ -6,3 +6,6 @@
 
 # your custom compressed files
 *.shrink
+
+# IDE file
+/.vscode
