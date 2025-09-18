@@ -23,6 +23,12 @@ void heapify_up(Priority_queue *pq, int index) {
     }
 }
 
+typedef struct Leaf {
+    Node data;
+    struct Leaf *left;
+    struct Leaf *right;
+} Leaf;
+
 long huffman_encode(long buffer_length_rle, unsigned char *buffer_rle, unsigned char *compressed_buffer) {
     long compressed_buffer_length = 0;
 
@@ -49,6 +55,13 @@ long huffman_encode(long buffer_length_rle, unsigned char *buffer_rle, unsigned 
             pq->size++;
         }
     }
+
+    //binary tree from priority queue
+
+
+    //binary tree to dictionary
+
+    //buffer rle + dictionary = compressed_buffer
 
     free(pq->characters);
     free(pq);
