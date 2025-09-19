@@ -1,4 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
-void rld();
+long rld(unsigned char *, unsigned char *, long);
