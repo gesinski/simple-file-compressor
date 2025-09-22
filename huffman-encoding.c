@@ -1,7 +1,7 @@
 #include "huffman-encoding.h"
 
 typedef struct {
-    unsigned char sign;
+    char sign;
     long occurrances;
 } Data;
 
@@ -16,26 +16,75 @@ typedef struct {
     long size;
 } Priority_queue;
 
-void swap(Node *a, Node *b) {
-    Node temp = *a;
+void swap(Node **a, Node **b) {
+    Node *temp = *a;
     *a = *b;
     *b = temp;
 }
 
 void heapify_up(Priority_queue *pq, int index) {
-    if (index && pq->characters[(index - 1) / 2]->data.occurrances > pq->characters[index]->data.occurrances) {
-        swap(&pq->characters[(index - 1) / 2], &pq->characters[index]);
-        heapify_up(pq, (index - 1) / 2);
+    while (index > 0) {
+        int parent = (index - 1) / 2;
+        if (pq->characters[parent]->data.occurrances > pq->characters[index]->data.occurrances) {
+            swap(&pq->characters[parent], &pq->characters[index]);
+            index = parent;
+        } else break;
+    }
+}
+
+void heapify_down(Priority_queue *pq, int index) {
+    while (1) {
+        int left = 2*index + 1;
+        int right = 2*index + 2;
+        int smallest = index;
+
+        if (left < pq->size && pq->characters[left]->data.occurrances < pq->characters[smallest]->data.occurrances)
+            smallest = left;
+        if (right < pq->size && pq->characters[right]->data.occurrances < pq->characters[smallest]->data.occurrances)
+            smallest = right;
+
+        if (smallest == index) break;
+        swap(&pq->characters[index], &pq->characters[smallest]);
+        index = smallest;
     }
 }
 
 Node *extract_min(Priority_queue *pq) {
-    if (!pq->size) {
-        printf("Priority queue is empty\n");
+    if (pq->size == 0) return NULL;
+    Node *res = pq->characters[0];
+    pq->characters[0] = pq->characters[pq->size - 1];
+    pq->size--;
+    if (pq->size > 0) heapify_down(pq, 0);
+    return res;
+}
+
+void pq_insert(Priority_queue *pq, Node *n) {
+    pq->characters[pq->size] = n;
+    heapify_up(pq, pq->size);
+    pq->size++;
+}
+
+void build_codes(Node* root, char current_code[], unsigned int bits_occupied, unsigned char *codes[]) {
+    if (root == NULL) {
         return;
     }
-    pq->size--;
-    return pq->characters[pq->size];
+
+    if (root->left == NULL && root->right == NULL) {
+        current_code[bits_occupied] = '\0';
+        unsigned char sym = root->data.sign;
+        codes[sym] = malloc(bits_occupied + 1);
+        if (!codes[sym]) { perror("malloc"); exit(1); }
+        strcpy(codes[sym], current_code);
+        return;
+    }
+
+    current_code[bits_occupied] = '0';
+    current_code[bits_occupied + 1] = '\0';
+    build_codes(root->left, current_code, bits_occupied + 1, codes);
+
+    current_code[bits_occupied] = '1';
+    current_code[bits_occupied + 1] = '\0';
+    build_codes(root->right, current_code, bits_occupied + 1, codes);
 }
 
 long huffman_encode(long buffer_length_rle, unsigned char *buffer_rle, unsigned char *compressed_buffer) {
@@ -57,12 +106,12 @@ long huffman_encode(long buffer_length_rle, unsigned char *buffer_rle, unsigned 
             }
         }
         if (!repetition) {
-            Node *new_node;
+            Node *new_node = malloc(sizeof(Node));
+            if (!new_node) { perror("malloc"); exit(1); }
             new_node->data.sign = buffer_rle[i];
             new_node->data.occurrances = 1;
-
-            pq->characters[pq->size] = new_node;
-            pq->size++;
+            new_node->left = new_node->right = NULL;
+            pq_insert(pq, new_node);
         }
     }
 
@@ -70,23 +119,33 @@ long huffman_encode(long buffer_length_rle, unsigned char *buffer_rle, unsigned 
     while (pq->size > 1) {
         Node *left = extract_min(pq);
         Node *right = extract_min(pq);
-
         Node *parent = malloc(sizeof(Node));
         parent->data.sign = '\0';
         parent->data.occurrances = left->data.occurrances + right->data.occurrances;
         parent->left = left;
         parent->right = right;
-
-        pq->characters[pq->size] = parent;
-        heapify_up(pq, pq->size);
-        pq->size++;
+        pq_insert(pq, parent);
     }
-    Node *root = pq->characters[0];
+    Node *root = (pq->size == 1) ? extract_min(pq) : NULL;
 
-    //binary tree to dictionary
+    //binary codes to dictionary
+    unsigned char *huffman_codes[256];
+    for (int i = 0; i < 256; i++) {
+        huffman_codes[i] = NULL;
+    }
+    char current_code[256];
+    build_codes(root, current_code, 0, huffman_codes);
 
-    //buffer rle + dictionary = compressed_buffer
+    // Combine with your buffer
 
+    //     For each symbol in the RLE buffer -> Huffman code (bit string) into compressed_buffer.
+
+    //    ?a way to pack bits into bytes?
+
+    //free memory
+    for (int i = 0; i < 256; i++) {
+        if (huffman_codes[i] != NULL) free(huffman_codes[i]);
+    }
     free(pq->characters);
     free(pq);
     return compressed_buffer_length;
