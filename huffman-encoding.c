@@ -136,11 +136,35 @@ long huffman_encode(long buffer_length_rle, unsigned char *buffer_rle, unsigned 
     char current_code[256];
     build_codes(root, current_code, 0, huffman_codes);
 
-    // Combine with your buffer
+    //store binary codes
+    unsigned int bits_used = 0;
+    unsigned char byte = 0;
+    for (long buffer_sign_index = 0; buffer_sign_index < buffer_length_rle; buffer_sign_index++) {
+        unsigned char current_sign = buffer_rle[buffer_sign_index];
+        char *code = huffman_codes[current_sign];
+        for (int k = 0; code[k] != '\0'; k++) {
+            int bit = (code[k] == '1') ? 1 : 0;
+            byte |= (bit << (7 - bits_used));
+            bits_used++;
+            if (bits_used == 8) {
+                compressed_buffer[compressed_buffer_length++] = byte;
+                bits_used = 0;
+                byte = 0;
+            }
+        }
+    }
+    if (bits_used > 0) {
+        compressed_buffer[compressed_buffer_length++] = byte;
+    }
 
-    //     For each symbol in the RLE buffer -> Huffman code (bit string) into compressed_buffer.
-
-    //    ?a way to pack bits into bytes?
+    //debug
+    // for (long i = 0; i < compressed_buffer_length; i++) {
+    //     for (int b = 7; b >= 0; b--) {
+    //         printf("%d", (compressed_buffer[i] >> b) & 1);
+    //     }
+    //     printf(" ");
+    // }
+    // printf("\n");
 
     //free memory
     for (int i = 0; i < 256; i++) {
