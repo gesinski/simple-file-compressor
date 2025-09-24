@@ -3,6 +3,7 @@
 #include "rle.h"
 #include "rld.h"
 #include "huffman-encoding.h"
+#include "huffman-encoding.h"
 
 int main(int argc, char* argv[]) {
     FILE *file, *fcompressed;
