@@ -72,7 +72,16 @@ void build_codes(Node* root, char current_code[], unsigned int bits_occupied, un
 }
 
 void write_tree(Node *root, FILE *file) {
+    if (!root) return;
 
+    if (root->left != NULL || root->right != NULL) {
+        fputc('0', file);
+        write_tree(root->left, file);
+        write_tree(root->right, file);
+    } else {
+        fputc('1', file);
+        fputc(root->data.sign, file);
+    }
 }
 
 long huffman_encode(long buffer_length_rle, unsigned char *buffer_rle, unsigned char *compressed_buffer, FILE *fcompressed) {
