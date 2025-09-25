@@ -1,21 +1,5 @@
 #include "huffman-encoding.h"
 
-typedef struct {
-    char sign;
-    long occurrances;
-} Data;
-
-typedef struct Node {
-    Data data;
-    struct Node *left;
-    struct Node *right;
-} Node;
-
-typedef struct {
-    Node **characters;
-    long size;
-} Priority_queue;
-
 void swap(Node **a, Node **b) {
     Node *temp = *a;
     *a = *b;
@@ -87,7 +71,11 @@ void build_codes(Node* root, char current_code[], unsigned int bits_occupied, un
     build_codes(root->right, current_code, bits_occupied + 1, codes);
 }
 
-long huffman_encode(long buffer_length_rle, unsigned char *buffer_rle, unsigned char *compressed_buffer) {
+void write_tree(Node *root, FILE *file) {
+
+}
+
+long huffman_encode(long buffer_length_rle, unsigned char *buffer_rle, unsigned char *compressed_buffer, FILE *fcompressed) {
     long compressed_buffer_length = 0;
 
     //priority Queue 
@@ -156,6 +144,9 @@ long huffman_encode(long buffer_length_rle, unsigned char *buffer_rle, unsigned 
     if (bits_used > 0) {
         compressed_buffer[compressed_buffer_length++] = byte;
     }
+
+    //huffman tree write to compressed file
+    write_tree(root, fcompressed);
 
     //debug
     // for (long i = 0; i < compressed_buffer_length; i++) {

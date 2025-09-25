@@ -3,7 +3,7 @@
 #include "rle.h"
 #include "rld.h"
 #include "huffman-encoding.h"
-#include "huffman-encoding.h"
+#include "huffman-decoding.h"
 
 int main(int argc, char* argv[]) {
     FILE *file, *fcompressed;
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
     unsigned char *buffer_rle = (unsigned char*) malloc(fileSize);
     long buffer_length_rle = rle(buffer, buffer_rle, fileSize);
     unsigned char *buffer_compressed = malloc(buffer_length_rle * 16); 
-    long compressed_buffer_length = huffman_encode(buffer_length_rle, buffer_rle, buffer_compressed);
+    long compressed_buffer_length = huffman_encode(buffer_length_rle, buffer_rle, buffer_compressed, fcompressed);
     
     fwrite(buffer_compressed, 1, compressed_buffer_length, fcompressed);
 
