@@ -8,8 +8,8 @@
 int main(int argc, char* argv[]) {
     FILE *file, *fcompressed;
     unsigned char *buffer; 
-    long fileSize;
-    size_t bytesRead;
+    long file_size;
+    size_t bytes_read;
 
     char fcompressed_name[1024]; 
     snprintf(fcompressed_name, sizeof(fcompressed_name), "%s.shrink", argv[1]);
@@ -21,18 +21,18 @@ int main(int argc, char* argv[]) {
     }
 
     fseek(file, 0, SEEK_END);
-    fileSize = ftell(file);
+    file_size = ftell(file);
     rewind(file);
 
-    buffer = (unsigned char*) malloc(fileSize);
+    buffer = (unsigned char*) malloc(file_size);
     if (!buffer) {
         perror("No memory");
         fclose(file);
         return 1;
     }
 
-    bytesRead = fread(buffer, 1, fileSize, file);
-    if (bytesRead != fileSize) {
+    bytes_read = fread(buffer, 1, file_size, file);
+    if (bytes_read != file_size) {
         perror("Error reading file");
         free(buffer);
         fclose(file);
@@ -47,16 +47,46 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    unsigned char *buffer_rle = (unsigned char*) malloc(fileSize);
-    long buffer_length_rle = rle(buffer, buffer_rle, fileSize);
-    unsigned char *buffer_compressed = malloc(buffer_length_rle * 16); 
+    unsigned char *buffer_rle = (unsigned char*) malloc(file_size);
+    long buffer_length_rle = rle(buffer, buffer_rle, file_size);
+    unsigned char *buffer_compressed = (unsigned char*) malloc(buffer_length_rle * 16); 
     long compressed_buffer_length = huffman_encode(buffer_length_rle, buffer_rle, buffer_compressed, fcompressed);
     
     fwrite(buffer_compressed, 1, compressed_buffer_length, fcompressed);
-
     fclose(fcompressed);
     free(buffer);
+
+    FILE *f = fopen(fcompressed_name, "rb");
+    if (!f) {
+        perror("Can't open file");
+        return 1;
+    }
+
+    fseek(f, 0, SEEK_END);
+    long ffile_size = ftell(f);
+    rewind(f);
+
+    unsigned char *compressed_buffer = malloc(ffile_size);
+    if (!buffer) {
+        perror("malloc");
+        fclose(f);
+        return 1;
+    }
+
+    size_t bytes = fread(compressed_buffer, 1, ffile_size, f);
+    fclose(f);
+
+    if (bytes != ffile_size) {
+        fprintf(stderr, "Error: expected %ld bytes, got %zu\n", ffile_size, bytes);
+        free(compressed_buffer);
+        return 1;
+    }
+
+    unsigned char *buffer_decompressed = (unsigned char*) malloc(ffile_size);
+    long huffman_decompressed_length = huffman_decode(compressed_buffer, buffer_decompressed);
+
+    free(compressed_buffer);
     free(buffer_rle);
-    free(buffer_compressed);
+    free(buffer_decompressed);
     return 0;
 }
