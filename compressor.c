@@ -83,7 +83,9 @@ int main(int argc, char* argv[]) {
     }
 
     unsigned char *buffer_decompressed = (unsigned char*) malloc(ffile_size);
-    long huffman_decompressed_length = huffman_decode(compressed_buffer, buffer_decompressed);
+    long huffman_decompressed_length = huffman_decode(ffile_size, compressed_buffer, buffer_decompressed);
+    long decompressed_length = rld(buffer_decompressed, NULL, huffman_decompressed_length);
+
 
     free(compressed_buffer);
     free(buffer_rle);
