@@ -24,6 +24,7 @@ long rld(unsigned char *after_huffman_buffer, unsigned char **final_buffer, long
 
         if (i >= after_huffman_buffer_length) break;
         sign = after_huffman_buffer[i];
+        if (occurances == 0) occurances = 1;
 
         for (long k = 0; k < occurances; k++) {
             if (file_size >= capacity) {
