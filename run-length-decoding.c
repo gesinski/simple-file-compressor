@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include <stdio.h>
 
-long rld(unsigned char *after_huffman_buffer, long after_huffman_buffer_length, unsigned char **final_buffer) {
+long rld(unsigned char *after_huffman_buffer, unsigned char **final_buffer, long after_huffman_buffer_length) {
     long file_size = 0;
     long capacity = 1024; 
 

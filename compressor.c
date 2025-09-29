@@ -85,8 +85,8 @@ int main(int argc, char* argv[]) {
 
     unsigned char *buffer_decompressed = (unsigned char*) malloc(ffile_size);
     long huffman_decompressed_length = huffman_decode(ffile_size, compressed_buffer, &buffer_decompressed);
-    unsigned char *decompressed;
-    long decompressed_length = rld(buffer_decompressed, huffman_decompressed_length, &decompressed);
+    unsigned char *decompressed = NULL;
+    long decompressed_length = rld(buffer_decompressed, &decompressed, huffman_decompressed_length);
 
     char funcompressed_name[1024];
     snprintf(funcompressed_name, sizeof(funcompressed_name), "%s.unshrink", argv[1]);
