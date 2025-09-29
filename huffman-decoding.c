@@ -34,14 +34,42 @@ void free_tree(Node *root) {
     free(root);
 }
 
-long huffman_decode(long buffer_length, unsigned char *compressed_buffer, unsigned char *decompressed_buffer) {
+long huffman_decode(long buffer_length, unsigned char *compressed_buffer, unsigned char **decompressed_buffer) {
     long idx = 0;
+    long decompressed_length = 0;
+    long capacity = buffer_length;
     Node *root = read_tree(compressed_buffer, &idx);
-    while(idx < buffer_length) {
+    if (compressed_buffer[idx] == '#') {
+        idx++;
+    }
+
+    Node *current = root;
+
+    while (idx < buffer_length) {
         unsigned char byte = compressed_buffer[idx];
         for (int i = 0; i < 8; i++) {
-            
+            int bit = (byte >> (7 - i)) & 1;
+            current = bit ? current->right : current->left;
+
+            if (current->left == NULL && current->right == NULL) {
+                if (decompressed_length >= capacity) {
+                    capacity *= 2;
+                    unsigned char *tmp = realloc(*decompressed_buffer, capacity);
+                    if (!tmp) {
+                        perror("realloc");
+                        free(*decompressed_buffer);
+                        free_tree(root);
+                        exit(1);
+                    }
+                    *decompressed_buffer = tmp;
+                }
+                (*decompressed_buffer)[decompressed_length++] = current->sign;
+                current = root; 
+            }
         }
+        idx++;
     }
+
     free_tree(root);
+    return decompressed_length;
 }
