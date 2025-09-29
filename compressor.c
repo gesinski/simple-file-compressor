@@ -52,6 +52,7 @@ int main(int argc, char* argv[]) {
     unsigned char *buffer_compressed = (unsigned char*) malloc(buffer_length_rle * 16); 
     long compressed_buffer_length = huffman_encode(buffer_length_rle, buffer_rle, buffer_compressed, fcompressed);
     
+    fputc('#', fcompressed); //marker for the end of tree
     fwrite(buffer_compressed, 1, compressed_buffer_length, fcompressed);
     fclose(fcompressed);
     free(buffer);
@@ -83,12 +84,28 @@ int main(int argc, char* argv[]) {
     }
 
     unsigned char *buffer_decompressed = (unsigned char*) malloc(ffile_size);
-    long huffman_decompressed_length = huffman_decode(ffile_size, compressed_buffer, buffer_decompressed);
-    long decompressed_length = rld(buffer_decompressed, NULL, huffman_decompressed_length);
+    long huffman_decompressed_length = huffman_decode(ffile_size, compressed_buffer, &buffer_decompressed);
+    unsigned char *decompressed;
+    long decompressed_length = rld(buffer_decompressed, huffman_decompressed_length, &decompressed);
 
+    char funcompressed_name[1024];
+    snprintf(funcompressed_name, sizeof(funcompressed_name), "%s.unshrink", argv[1]);
+
+    FILE *funcompressed = fopen(funcompressed_name, "wb");
+    if (!funcompressed) {
+        perror("Can't open unshrink file");
+        free(compressed_buffer);
+        free(buffer_rle);
+        free(buffer_decompressed);
+        free(decompressed);
+        return 1;
+    }
+    fwrite(decompressed, 1, decompressed_length, funcompressed);
+    fclose(funcompressed);
 
     free(compressed_buffer);
     free(buffer_rle);
     free(buffer_decompressed);
+    free(decompressed);
     return 0;
 }
