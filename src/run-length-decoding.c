@@ -1,4 +1,4 @@
-#include "rld.h"
+#include "../include/rld.h"
 #include <stdlib.h>
 #include <ctype.h>
 #include <stdio.h>

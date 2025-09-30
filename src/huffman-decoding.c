@@ -1,4 +1,4 @@
-#include "huffman-decoding.h"
+#include "../include/huffman-decoding.h"
 
 typedef struct Node {
     unsigned char sign;

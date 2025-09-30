@@ -1,4 +1,4 @@
-#include "rle.h"
+#include "../include/rle.h"
 
 long rle(unsigned char *buffer, unsigned char *compressed_buffer, long fileSize) {
     long compressed_buffer_length = 0;

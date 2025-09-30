@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "rle.h"
-#include "rld.h"
-#include "huffman-encoding.h"
-#include "huffman-decoding.h"
+#include "../include/rle.h"
+#include "../include/rld.h"
+#include "../include/huffman-encoding.h"
+#include "../include/huffman-decoding.h"
 
 int main(int argc, char* argv[]) {
     if (argc != 3) {

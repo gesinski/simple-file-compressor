@@ -1,4 +1,4 @@
-#include "huffman-encoding.h"
+#include "../include/huffman-encoding.h"
 
 void swap(Node **a, Node **b) {
     Node *temp = *a;
