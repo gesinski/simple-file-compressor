@@ -1,0 +1,37 @@
+This is a simple example text file.  
+It contains repeated words and characters so that compression can be tested.  
+The quick brown fox jumps over the lazy dog.  
+The quick brown fox jumps over the lazy dog.  
+The quick brown fox jumps over the lazy dog.  
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+
+Compression should reduce the size of this file without losing information.  
+Compression should reduce the size of this file without losing information.  
+Compression should reduce the size of this file without losing information.  
+
+Decompression should restore it exactly to this original form.  
+Decompression should restore it exactly to this original form.  
+Decompression should restore it exactly to this original form.  
+
+Repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat.  
+Repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat.  
+Repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat.  
+
+All your base are belong to us.  
+All your base are belong to us.  
+All your base are belong to us.  
+All your base are belong to us.  
+
+Simple text, simple test, simple compression, simple decompression.  
+Simple text, simple test, simple compression, simple decompression.  
+Simple text, simple test, simple compression, simple decompression.  
+
+The end of the file should still be readable and complete.  
+The end of the file should still be readable and complete.  
+The end of the file should still be readable and complete.  
+
+yes.
