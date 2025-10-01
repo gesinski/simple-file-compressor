@@ -1,5 +1,6 @@
 # compiled binaries
 *.out
+/obj
 
 # text files (test inputs/outputs)
 *.txt
