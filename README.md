@@ -73,6 +73,7 @@ unshrink example.shrink
 ---
 
 ## Project Structure
+```
 simple-file-compressor/
 ├── README.md               
 ├── Makefile               
@@ -88,7 +89,7 @@ simple-file-compressor/
     ├── huffman-encoding.c
     ├── run-length-decoding.c
     └── run-length-encoding.c
-
+```
 
 ---
 
