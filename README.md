@@ -31,6 +31,7 @@ I chose RLE and Huffman Coding because together they provide a simple yet effect
 
 ## Installation
 Clone the repository and build the project:
+GCC version 14.2.0
 
 ```bash
 git clone https://github.com/gesinski/simple-file-compressor.git
